@@ -1,6 +1,7 @@
 package com.heroku.backend.controller;
 
 import com.heroku.backend.service.HealtCheckService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -13,7 +14,7 @@ public class HealthCheckController {
     }
 
     @GetMapping("/healthcheck")
-    public String healthCheck() {
+    public ResponseEntity<String> healthCheck() {
         return healtCheckService.healthCheck();
     }
 }
