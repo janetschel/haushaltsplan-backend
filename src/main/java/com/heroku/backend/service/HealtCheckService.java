@@ -20,7 +20,7 @@ public class HealtCheckService {
         System.out.println(mongoDbUri);
 
         String response = "Healthcheck completed at " + dateTimeFormatter.format(localDateTime);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(mongoDbUri);
     }
 
 }
