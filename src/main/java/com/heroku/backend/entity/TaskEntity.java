@@ -13,13 +13,13 @@ import javax.persistence.Id;
 @Document(collection = "tasks")
 public class TaskEntity {
     @Id
-    public String id;
+    private String id;
 
-    public String day;
-    public String chore;
-    public String pic;
-    public String blame;
-    public boolean done;
+    private String day;
+    private String chore;
+    private String pic;
+    private String blame;
+    private boolean done;
 
     public TaskEntity(String day, String chore, String pic, String blame, boolean done) {
         this.day = day;
