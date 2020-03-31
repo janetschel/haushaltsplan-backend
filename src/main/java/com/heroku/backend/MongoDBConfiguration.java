@@ -1,6 +1,5 @@
 package com.heroku.backend;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.MongoDbFactory;
@@ -10,16 +9,8 @@ import org.springframework.data.mongodb.core.SimpleMongoClientDbFactory;
 @Configuration
 public class MongoDBConfiguration {
 
-    @Value("${mongodb.uri}")
-    private String mongoDbUri;
-    private static String mongoDbUriConstant;
-
     public @Bean MongoDbFactory mongoDbFactory() {
-        if (mongoDbUri.startsWith("mongodb://")) {
-            mongoDbUriConstant = mongoDbUri;
-        }
-
-        return new SimpleMongoClientDbFactory(mongoDbUriConstant);
+        return new SimpleMongoClientDbFactory(ValueConfiguration.mongoDbUri);
     }
 
     public @Bean MongoTemplate mongoTemplate() {
