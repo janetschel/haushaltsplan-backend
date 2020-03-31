@@ -1,6 +1,7 @@
 package com.heroku.backend.controller;
 
 import com.heroku.backend.entity.TaskEntity;
+import com.heroku.backend.exception.InvalidAuthenticationTokenException;
 import com.heroku.backend.service.TaskService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,22 +17,25 @@ public class TaskController {
     }
 
     @GetMapping("/getDocuments")
-    public ResponseEntity<List<TaskEntity>> getDocuments() {
-        return taskService.getDocuments();
+    public ResponseEntity<List<TaskEntity>> getDocuments(@RequestHeader("Auth-Token") String authToken) throws InvalidAuthenticationTokenException {
+        return taskService.getDocuments(authToken);
     }
 
     @PostMapping("/addDocument")
-    public ResponseEntity<String> addDocument(@RequestBody TaskEntity taskEntity) {
-        return taskService.addDocument(taskEntity);
+    public ResponseEntity<String> addDocument(@RequestBody TaskEntity taskEntity,
+                                              @RequestHeader("Auth-Token") String authToken) throws InvalidAuthenticationTokenException {
+        return taskService.addDocument(taskEntity, authToken);
     }
 
     @PutMapping("/updateDocument")
-    public ResponseEntity<String> updateDocument(@RequestBody TaskEntity taskEntity) {
-        return taskService.updateDocument(taskEntity);
+    public ResponseEntity<String> updateDocument(@RequestBody TaskEntity taskEntity,
+                                                 @RequestHeader("Auth-Token") String authToken) throws InvalidAuthenticationTokenException {
+        return taskService.updateDocument(taskEntity, authToken);
     }
 
     @DeleteMapping("/deleteDocument")
-    public ResponseEntity<String> deleteDocument(@RequestParam("id") String id) {
-        return taskService.deleteDocument(id);
+    public ResponseEntity<String> deleteDocument(@RequestParam("id") String id,
+                                                 @RequestHeader("Auth-Token") String authToken) throws InvalidAuthenticationTokenException {
+        return taskService.deleteDocument(id, authToken);
     }
 }
