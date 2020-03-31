@@ -1,7 +1,7 @@
 package com.heroku.backend.service;
 
 import com.heroku.backend.MongoDBConfiguration;
-import com.heroku.backend.ValueConfig;
+import com.heroku.backend.ValueConfiguration;
 import com.heroku.backend.entity.TaskEntity;
 import com.heroku.backend.exception.InvalidAuthenticationTokenException;
 import com.heroku.backend.repository.TaskRepository;
@@ -23,9 +23,6 @@ public class TaskService {
     public final TaskRepository taskRepository;
     private MongoOperations mongoOperations;
 
-    @Value("${authentication.user}")
-    private String userAuthentication;
-
     @Autowired
     public TaskService(TaskRepository taskRepository) {
         this.taskRepository = taskRepository;
@@ -34,7 +31,7 @@ public class TaskService {
     }
 
     public ResponseEntity<List<TaskEntity>> getDocuments(String authToken) throws InvalidAuthenticationTokenException {
-        if (!authToken.equals(ValueConfig.authenticationToken)) {
+        if (!authToken.equals(ValueConfiguration.authenticationToken)) {
             throw new InvalidAuthenticationTokenException();
         }
 
@@ -42,7 +39,7 @@ public class TaskService {
     }
 
     public ResponseEntity<String> addDocument(TaskEntity taskEntity, String authToken) throws InvalidAuthenticationTokenException {
-        if (!authToken.equals(ValueConfig.authenticationToken)) {
+        if (!authToken.equals(ValueConfiguration.authenticationToken)) {
             throw new InvalidAuthenticationTokenException();
         }
 
@@ -66,7 +63,7 @@ public class TaskService {
     }
 
     public ResponseEntity<String> updateDocument(TaskEntity taskEntity, String authToken) throws InvalidAuthenticationTokenException {
-        if (!authToken.equals(ValueConfig.authenticationToken)) {
+        if (!authToken.equals(ValueConfiguration.authenticationToken)) {
             throw new InvalidAuthenticationTokenException();
         }
 
@@ -93,7 +90,7 @@ public class TaskService {
     }
 
     public ResponseEntity<String> deleteDocument(String id, String authToken) throws InvalidAuthenticationTokenException {
-        if (!authToken.equals(userAuthentication)) {
+        if (!authToken.equals(ValueConfiguration.authenticationToken)) {
             throw new InvalidAuthenticationTokenException();
         }
 
