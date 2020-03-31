@@ -16,7 +16,7 @@ public class AuthTokenController {
         this.authTokenService = authTokenService;
     }
 
-    @GetMapping("getAuthToken")
+    @GetMapping("/getAuthToken")
     public ResponseEntity<String> getAuthToken(@RequestHeader("Authorization") String base64String)
             throws InvalidBase64StringException {
         return authTokenService.getAuthToken(base64String);
