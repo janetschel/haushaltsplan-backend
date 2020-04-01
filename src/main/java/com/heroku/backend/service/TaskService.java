@@ -80,8 +80,9 @@ public class TaskService {
             return ResponseEntity.status(HttpStatus.ACCEPTED).body(message);
         }
 
-        documentToUpdate.setBlame(taskEntity.getBlame());
+        documentToUpdate.setDay(taskEntity.getDay());
         documentToUpdate.setPic(taskEntity.getPic());
+        documentToUpdate.setBlame(taskEntity.getBlame());
         documentToUpdate.setDone(taskEntity.isDone());
         mongoOperations.save(documentToUpdate);
 
