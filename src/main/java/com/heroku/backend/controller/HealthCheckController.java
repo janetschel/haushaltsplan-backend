@@ -1,20 +1,20 @@
 package com.heroku.backend.controller;
 
-import com.heroku.backend.service.HealtCheckService;
+import com.heroku.backend.service.HealthCheckService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class HealthCheckController {
-    public final HealtCheckService healtCheckService;
+    public final HealthCheckService healthCheckService;
 
-    public HealthCheckController(HealtCheckService healtCheckService) {
-        this.healtCheckService = healtCheckService;
+    public HealthCheckController(HealthCheckService healthCheckService) {
+        this.healthCheckService = healthCheckService;
     }
 
     @GetMapping("/healthcheck")
     public ResponseEntity<String> healthCheck() {
-        return healtCheckService.healthCheck();
+        return healthCheckService.healthCheck();
     }
 }
