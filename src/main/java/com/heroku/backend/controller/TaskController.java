@@ -21,19 +21,19 @@ public class TaskController {
         return taskService.getDocuments(authToken);
     }
 
-    @PostMapping("/addDocument")
+    @GetMapping("/addDocument")
     public ResponseEntity<String> addDocument(@RequestBody TaskEntity taskEntity,
                                               @RequestParam("token") String authToken) throws InvalidAuthenticationTokenException {
         return taskService.addDocument(taskEntity, authToken);
     }
 
-    @PutMapping("/updateDocument")
+    @GetMapping("/updateDocument")
     public ResponseEntity<String> updateDocument(@RequestBody TaskEntity taskEntity,
                                                  @RequestParam("token") String authToken) throws InvalidAuthenticationTokenException {
         return taskService.updateDocument(taskEntity, authToken);
     }
 
-    @DeleteMapping("/deleteDocument")
+    @GetMapping("/deleteDocument")
     public ResponseEntity<String> deleteDocument(@RequestParam("id") String id,
                                                  @RequestParam("token") String authToken) throws InvalidAuthenticationTokenException {
         return taskService.deleteDocument(id, authToken);
