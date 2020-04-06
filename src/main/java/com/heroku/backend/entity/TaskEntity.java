@@ -1,5 +1,6 @@
 package com.heroku.backend.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -10,6 +11,7 @@ import javax.persistence.Id;
 @Entity
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 @Document(collection = "tasks")
 public class TaskEntity {
     @Id
