@@ -22,14 +22,13 @@ public class TaskController {
     }
 
     @GetMapping("/addDocument")
-    public ResponseEntity<String> addDocument(@RequestParam("id") String id,
-                                              @RequestParam("day") String day,
+    public ResponseEntity<String> addDocument(@RequestParam("day") String day,
                                               @RequestParam("chore") String chore,
                                               @RequestParam("pic") String pic,
                                               @RequestParam("blame") String blame,
                                               @RequestParam("done") boolean done,
                                               @RequestParam("token") String authToken) throws InvalidAuthenticationTokenException {
-        TaskEntity taskEntity = new TaskEntity(id, day, chore, pic, blame, done);
+        TaskEntity taskEntity = new TaskEntity(day, chore, pic, blame, done);
         return taskService.addDocument(taskEntity, authToken);
     }
 
