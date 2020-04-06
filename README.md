@@ -10,7 +10,7 @@ Gesichert ist das Backend durch ein Token-System. Der Token ist erst nach gelung
 Der einzige Path, welcher nach außen sichtbar und ohne Token o.Ä. accessible ist, ist der Healthcheck.
 
 ## Status vom Backend
-*Falls heroku = unkown, dann sleeped das Deployment der Application* 
+*Falls heroku = unkown, dann sleept das Deployment der Application* 
 
 [![Heroku App Status](http://heroku-shields.herokuapp.com/haushaltsplan)](https://haushaltsplan-backend.herokuapp.com/healthcheck)
 [![Deployment Status](https://img.shields.io/github/deployments/janetschel/haushaltsplan-backend/haushaltsplan-backend?label=state%20of%20deployment)](https://haushaltsplan-backend.herokuapp.com/healthcheck)
