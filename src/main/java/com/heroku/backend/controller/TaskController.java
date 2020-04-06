@@ -17,25 +17,25 @@ public class TaskController {
     }
 
     @GetMapping("/getDocuments")
-    public ResponseEntity<List<TaskEntity>> getDocuments(@RequestHeader("Auth-Token") String authToken) throws InvalidAuthenticationTokenException {
+    public ResponseEntity<List<TaskEntity>> getDocuments(@RequestParam("token") String authToken) throws InvalidAuthenticationTokenException {
         return taskService.getDocuments(authToken);
     }
 
     @PostMapping("/addDocument")
     public ResponseEntity<String> addDocument(@RequestBody TaskEntity taskEntity,
-                                              @RequestHeader("Auth-Token") String authToken) throws InvalidAuthenticationTokenException {
+                                              @RequestParam("token") String authToken) throws InvalidAuthenticationTokenException {
         return taskService.addDocument(taskEntity, authToken);
     }
 
     @PutMapping("/updateDocument")
     public ResponseEntity<String> updateDocument(@RequestBody TaskEntity taskEntity,
-                                                 @RequestHeader("Auth-Token") String authToken) throws InvalidAuthenticationTokenException {
+                                                 @RequestParam("token") String authToken) throws InvalidAuthenticationTokenException {
         return taskService.updateDocument(taskEntity, authToken);
     }
 
     @DeleteMapping("/deleteDocument")
     public ResponseEntity<String> deleteDocument(@RequestParam("id") String id,
-                                                 @RequestHeader("Auth-Token") String authToken) throws InvalidAuthenticationTokenException {
+                                                 @RequestParam("token") String authToken) throws InvalidAuthenticationTokenException {
         return taskService.deleteDocument(id, authToken);
     }
 }
