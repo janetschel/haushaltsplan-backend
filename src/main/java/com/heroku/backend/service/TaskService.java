@@ -1,22 +1,14 @@
 package com.heroku.backend.service;
 
-import com.heroku.backend.config.MongoDBConfig;
 import com.heroku.backend.config.ValueConfig;
 import com.heroku.backend.entity.TaskEntity;
 import com.heroku.backend.exception.InvalidAuthenticationTokenException;
 import com.heroku.backend.repository.TaskRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.data.mongodb.core.MongoOperations;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class TaskService {
@@ -66,7 +58,6 @@ public class TaskService {
                 "Task with ID '" + id + "' does not exist and could therefore not be updated. It was created instead";
 
         TaskEntity documentToUpdate = taskRepository.findById(id).orElse(null);
-        System.out.println(documentToUpdate);
 
         if (documentToUpdate == null) {
             addDocument(taskEntity, authToken);
