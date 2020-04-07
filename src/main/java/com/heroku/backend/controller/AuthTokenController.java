@@ -4,7 +4,7 @@ import com.heroku.backend.exception.InvalidBase64StringException;
 import com.heroku.backend.service.AuthTokenService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -17,7 +17,7 @@ public class AuthTokenController {
     }
 
     @GetMapping("/getAuthToken")
-    public ResponseEntity<String> getAuthToken(@RequestParam("auth") String base64String)
+    public ResponseEntity<String> getAuthToken(@RequestHeader("Auth-String") String base64String)
             throws InvalidBase64StringException {
         return authTokenService.getAuthToken(base64String);
     }
