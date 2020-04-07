@@ -1,6 +1,6 @@
 package com.heroku.backend.service;
 
-import com.heroku.backend.ValueConfiguration;
+import com.heroku.backend.config.ValueConfig;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -9,8 +9,8 @@ import org.springframework.stereotype.Service;
 public class LoginService {
 
     public ResponseEntity<Boolean> loginUser(String base64String) {
-        if (base64String.equals(ValueConfiguration.base64FirstUser) ||
-                base64String.equals(ValueConfiguration.base64SecondUser)) {
+        if (base64String.equals(ValueConfig.base64FirstUser) ||
+                base64String.equals(ValueConfig.base64SecondUser)) {
             return ResponseEntity.ok(true);
         }
 
