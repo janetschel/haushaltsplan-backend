@@ -1,9 +1,9 @@
 package com.heroku.backend.service;
 
-import com.heroku.backend.config.ValueConfig;
 import com.heroku.backend.entity.TaskEntity;
 import com.heroku.backend.exception.InvalidAuthenticationTokenException;
 import com.heroku.backend.repository.TaskRepository;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -14,12 +14,15 @@ import java.util.List;
 public class TaskService {
     public final TaskRepository taskRepository;
 
+    @Value("${authentication.user}")
+    private String authtoken;
+
     public TaskService(TaskRepository taskRepository) {
         this.taskRepository = taskRepository;
     }
 
     public ResponseEntity<List<TaskEntity>> getDocuments(String authToken) throws InvalidAuthenticationTokenException {
-        if (!authToken.equals(ValueConfig.authenticationToken)) {
+        if (!authToken.equals(authtoken)) {
             throw new InvalidAuthenticationTokenException();
         }
 
@@ -27,7 +30,7 @@ public class TaskService {
     }
 
     public ResponseEntity<String> addDocument(TaskEntity taskEntity, String authToken) throws InvalidAuthenticationTokenException {
-        if (!authToken.equals(ValueConfig.authenticationToken)) {
+        if (!authToken.equals(authtoken)) {
             throw new InvalidAuthenticationTokenException();
         }
 
@@ -49,7 +52,7 @@ public class TaskService {
     }
 
     public ResponseEntity<String> updateDocument(TaskEntity taskEntity, String authToken) throws InvalidAuthenticationTokenException {
-        if (!authToken.equals(ValueConfig.authenticationToken)) {
+        if (!authToken.equals(authtoken)) {
             throw new InvalidAuthenticationTokenException();
         }
 
@@ -78,7 +81,7 @@ public class TaskService {
     }
 
     public ResponseEntity<String> deleteDocument(String id, String authToken) throws InvalidAuthenticationTokenException {
-        if (!authToken.equals(ValueConfig.authenticationToken)) {
+        if (!authToken.equals(authtoken)) {
             throw new InvalidAuthenticationTokenException();
         }
 
