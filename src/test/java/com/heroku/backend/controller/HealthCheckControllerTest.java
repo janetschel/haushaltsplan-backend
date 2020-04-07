@@ -22,7 +22,7 @@ public class HealthCheckControllerTest {
     private HealthCheckService healthCheckService;
 
     @Test
-    public void healthcheckShouldReturnMessageFromService() throws Exception {
+    public void whenHealthcheck_thenOkMessage_andStatus200() throws Exception {
         Mockito.when(healthCheckService.healthCheck()).thenReturn(ResponseEntity.ok("Healthcheck ok"));
 
         this.mockMvc.perform(MockMvcRequestBuilders.get("/healthcheck"))

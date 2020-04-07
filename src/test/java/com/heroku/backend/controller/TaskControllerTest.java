@@ -39,7 +39,7 @@ public class TaskControllerTest {
     }
 
     @Test
-    public void getDocumentsWithHeaderPresentShouldReturnSpecifiedTaskEntityFromService() throws Exception {
+    public void givenValidHeader_whenGetDocuments_thenListOfDocuments_andStatus200() throws Exception {
         String authtoken = "authtoken";
         Mockito.when(taskService.getDocuments(authtoken)).thenReturn(ResponseEntity.ok(Collections.singletonList(taskEntity)));
 
@@ -51,7 +51,7 @@ public class TaskControllerTest {
     }
 
     @Test
-    public void getDocumentsWithInvalidHeaderPresentShouldReturnHttpStatusForbiddenFromService() throws Exception {
+    public void givenInvalidHeader_whenGetDocuments_thenStatus403() throws Exception {
         String authtoken = "wrongauthtoken";
         Mockito.when(taskService.getDocuments(authtoken)).thenThrow(InvalidAuthenticationTokenException.class);
 
@@ -62,7 +62,7 @@ public class TaskControllerTest {
     }
 
     @Test
-    public void getDocumentsWithNoHeaderPresentShouldReturnHttpStatusBadRequestFromService() throws Exception {
+    public void givenNoHeader_whenGetDocuments_thenStatus400() throws Exception {
         String authtoken = "authtoken";
         Mockito.when(taskService.getDocuments(authtoken)).thenReturn(ResponseEntity.ok(Collections.singletonList(taskEntity)));
 
@@ -73,7 +73,7 @@ public class TaskControllerTest {
     }
 
     @Test
-    public void addDocumentWithHeaderPresentShouldReturnUpdateSuccessfulMessageFromService() throws Exception {
+    public void givenValidHeader_whenAddDocument_thenSuccessfulMessage_andStatus200() throws Exception {
         String authtoken = "authtoken";
         Mockito.when(taskService.addDocument(taskEntity, authtoken)).thenReturn(ResponseEntity.ok("Update successful"));
 
@@ -87,7 +87,7 @@ public class TaskControllerTest {
     }
 
     @Test
-    public void addDocumentWithInvalidHeaderPresentShouldReturnHttpStatusForbiddenFromService() throws Exception {
+    public void givenInvalidHeader_whenAddDocument_thenStatus403() throws Exception {
         String authtoken = "wrongauthtoken";
         Mockito.when(taskService.addDocument(taskEntity, authtoken)).thenThrow(InvalidAuthenticationTokenException.class);
 
@@ -100,7 +100,7 @@ public class TaskControllerTest {
     }
 
     @Test
-    public void addDocumentWithNoHeaderPresentShouldReturnHttpStatusBadRequestFromService() throws Exception {
+    public void givenNoHeader_whenAddDocument_thenSuccessfulMessage_andStatus400() throws Exception {
         String authtoken = "authtoken";
         Mockito.when(taskService.addDocument(taskEntity, authtoken)).thenReturn(ResponseEntity.ok("Update successful"));
 
@@ -112,7 +112,7 @@ public class TaskControllerTest {
     }
 
     @Test
-    public void addDocumentWithNoContentInHeaderPresentShouldReturnHttpStatusBadRequestFromService() throws Exception {
+    public void givenNoBody_whenAddDocument_thenStatus400() throws Exception {
         String authtoken = "authtoken";
         Mockito.when(taskService.addDocument(taskEntity, authtoken)).thenReturn(ResponseEntity.ok("Update successful"));
 
@@ -123,7 +123,7 @@ public class TaskControllerTest {
     }
 
     @Test
-    public void updateDocumentWithHeaderPresentShouldReturnUpdateSuccessfulMessageFromService() throws Exception {
+    public void givenValidHeader_whenUpdateDocument_thenSuccessfulMessage_andStatus200() throws Exception {
         String authtoken = "authtoken";
         Mockito.when(taskService.updateDocument(taskEntity, authtoken)).thenReturn(ResponseEntity.ok("Update successful"));
 
@@ -137,7 +137,7 @@ public class TaskControllerTest {
     }
 
     @Test
-    public void updateDocumentWithInvalidHeaderPresentShouldReturnHttpStatusForbiddenFromService() throws Exception {
+    public void givenInvalidHeader_whenUpdateDocument_thenStatus403() throws Exception {
         String authtoken = "wrongauthtoken";
         Mockito.when(taskService.updateDocument(taskEntity, authtoken)).thenThrow(InvalidAuthenticationTokenException.class);
 
@@ -150,7 +150,7 @@ public class TaskControllerTest {
     }
 
     @Test
-    public void updateDocumentWithNoHeaderPresentShouldReturnHttpStatusBadRequestFromService() throws Exception {
+    public void givenNoHeader_whenUpdateDocument_thenStatus400() throws Exception {
         String authtoken = "authtoken";
         Mockito.when(taskService.updateDocument(taskEntity, authtoken)).thenReturn(ResponseEntity.ok("Update successful"));
 
@@ -162,7 +162,7 @@ public class TaskControllerTest {
     }
 
     @Test
-    public void updateDocumentWithNoContentInHeaderPresentShouldReturnHttpStatusBadRequestFromService() throws Exception {
+    public void givenNoBody_whenUpdateDocument_thenStatus400() throws Exception {
         String authtoken = "authtoken";
         Mockito.when(taskService.updateDocument(taskEntity, authtoken)).thenReturn(ResponseEntity.ok("Update successful"));
 
@@ -173,7 +173,7 @@ public class TaskControllerTest {
     }
 
     @Test
-    public void deleteDocumentWithHeaderPresentShouldReturnUpdateSuccessfulMessageFromService() throws Exception {
+    public void givenValidHeader_whenDeleteDocument_thenSuccessfulMessage_andStatus200() throws Exception {
         String authtoken = "authtoken";
         Mockito.when(taskService.deleteDocument(id, authtoken)).thenReturn(ResponseEntity.ok("Delete performed successfully"));
 
@@ -187,7 +187,7 @@ public class TaskControllerTest {
     }
 
     @Test
-    public void deleteDocumentWithInvalidHeaderPresentShouldReturnHttpStatusForbiddenFromService() throws Exception {
+    public void givenInvalidHeader_whenDeleteDocument_thenStatus403() throws Exception {
         String authtoken = "wrongauthtoken";
         Mockito.when(taskService.deleteDocument(id, authtoken)).thenThrow(InvalidAuthenticationTokenException.class);
 
@@ -200,7 +200,7 @@ public class TaskControllerTest {
     }
 
     @Test
-    public void deleteDocumentWithNoHeaderPresentShouldReturnHttpStatusBadRequestFromService() throws Exception {
+    public void givenNoHeader_whenDeleteDocument_thenStatus400() throws Exception {
         String authtoken = "authtoken";
         Mockito.when(taskService.deleteDocument(id, authtoken)).thenReturn(ResponseEntity.ok("Delete performed successfully"));
 
@@ -212,7 +212,7 @@ public class TaskControllerTest {
     }
 
     @Test
-    public void deleteDocumentWithNoIdAsRequestParamPresentShouldReturnHttpStatusBadRequestFromService() throws Exception {
+    public void givenNoIdAsRequestParam_whenDeleteDocument_thenStatus400() throws Exception {
         String authtoken = "authtoken";
         Mockito.when(taskService.deleteDocument(id, authtoken)).thenReturn(ResponseEntity.ok("Delete performed successfully"));
 

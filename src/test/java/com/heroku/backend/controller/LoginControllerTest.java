@@ -22,7 +22,7 @@ public class LoginControllerTest {
     private LoginService loginService;
 
     @Test
-    public void loginUserWithHeaderPresentShouldReturnTrueFromService() throws Exception {
+    public void givenValidHeader_whenLoginUser_thenTrue_andStatus200() throws Exception {
         String authorization = "samplestring";
         Mockito.when(loginService.loginUser(authorization)).thenReturn(ResponseEntity.ok(true));
 
@@ -34,18 +34,19 @@ public class LoginControllerTest {
     }
 
     @Test
-    public void loginUserWithInvalidHeaderPresentShouldReturnHttpStatusForbiddenFromService() throws Exception {
+    public void givenInvalidHeader_whenLoginUser_thenFalse_andStatus403() throws Exception {
         String authorization = "wrongsamplestring";
         Mockito.when(loginService.loginUser(authorization)).thenReturn(ResponseEntity.status(HttpStatus.FORBIDDEN).body(false));
 
         this.mockMvc.perform(MockMvcRequestBuilders.get("/login").header("Auth-String", authorization))
-                .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isForbidden());
+                .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isForbidden())
+                .andExpect(MockMvcResultMatchers.content().string("false"));
 
         Mockito.verify(loginService, Mockito.times(1)).loginUser(authorization);
     }
 
     @Test
-    public void loginUserWithNoHeaderPresentShouldReturnHttpStatusBadRequestFromService() throws Exception {
+    public void givenNoHeader_whenLoginUser_thenStatus400() throws Exception {
         String authorization = "samplestring";
         Mockito.when(loginService.loginUser(authorization)).thenReturn(ResponseEntity.ok(true));
 

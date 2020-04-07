@@ -23,7 +23,7 @@ public class AuthTokenControllerTest {
     private AuthTokenService authTokenService;
 
     @Test
-    public void getAuthTokenWithHeaderPresentShouldReturnAuthTokenFromService() throws Exception {
+    public void givenValidHeader_whenGetAuthToken_thenValidAuthtoken_andStatus200() throws Exception {
         String authorization = "samplestring";
         Mockito.when(authTokenService.getAuthToken(authorization)).thenReturn(ResponseEntity.ok("authtoken"));
 
@@ -35,7 +35,7 @@ public class AuthTokenControllerTest {
     }
 
     @Test
-    public void getAuthTokenWithInvalidHeaderPresentShouldReturnHttpStatusForbiddenFromService() throws Exception {
+    public void givenInvalidHeader_whenGetAuthToken_thenStatus403() throws Exception {
         String authorization = "wrongsamplestring";
         Mockito.when(authTokenService.getAuthToken(authorization)).thenThrow(InvalidBase64StringException.class);
 
@@ -46,7 +46,7 @@ public class AuthTokenControllerTest {
     }
 
     @Test
-    public void getAuthTokenWithNoHeaderPresentShouldReturnHttpStatusBadRequestFromService() throws Exception {
+    public void givenNoHeader_whenGetAuthToken_thenStatus400() throws Exception {
         String authorization = "samplestring";
         Mockito.when(authTokenService.getAuthToken(authorization)).thenReturn(ResponseEntity.ok("authtoken"));
 
