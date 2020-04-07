@@ -1,12 +1,11 @@
 package com.heroku.backend.service;
 
-import com.heroku.backend.MongoDBConfiguration;
-import com.heroku.backend.ValueConfiguration;
+import com.heroku.backend.config.MongoDBConfig;
+import com.heroku.backend.config.ValueConfig;
 import com.heroku.backend.entity.TaskEntity;
 import com.heroku.backend.exception.InvalidAuthenticationTokenException;
 import com.heroku.backend.repository.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.data.mongodb.core.MongoOperations;
@@ -26,12 +25,12 @@ public class TaskService {
     @Autowired
     public TaskService(TaskRepository taskRepository) {
         this.taskRepository = taskRepository;
-        ApplicationContext applicationContext = new AnnotationConfigApplicationContext(MongoDBConfiguration.class);
+        ApplicationContext applicationContext = new AnnotationConfigApplicationContext(MongoDBConfig.class);
         mongoOperations = (MongoOperations) applicationContext.getBean("mongoTemplate");
     }
 
     public ResponseEntity<List<TaskEntity>> getDocuments(String authToken) throws InvalidAuthenticationTokenException {
-        if (!authToken.equals(ValueConfiguration.authenticationToken)) {
+        if (!authToken.equals(ValueConfig.authenticationToken)) {
             throw new InvalidAuthenticationTokenException();
         }
 
@@ -39,7 +38,7 @@ public class TaskService {
     }
 
     public ResponseEntity<String> addDocument(TaskEntity taskEntity, String authToken) throws InvalidAuthenticationTokenException {
-        if (!authToken.equals(ValueConfiguration.authenticationToken)) {
+        if (!authToken.equals(ValueConfig.authenticationToken)) {
             throw new InvalidAuthenticationTokenException();
         }
 
@@ -63,7 +62,7 @@ public class TaskService {
     }
 
     public ResponseEntity<String> updateDocument(TaskEntity taskEntity, String authToken) throws InvalidAuthenticationTokenException {
-        if (!authToken.equals(ValueConfiguration.authenticationToken)) {
+        if (!authToken.equals(ValueConfig.authenticationToken)) {
             throw new InvalidAuthenticationTokenException();
         }
 
@@ -91,7 +90,7 @@ public class TaskService {
     }
 
     public ResponseEntity<String> deleteDocument(String id, String authToken) throws InvalidAuthenticationTokenException {
-        if (!authToken.equals(ValueConfiguration.authenticationToken)) {
+        if (!authToken.equals(ValueConfig.authenticationToken)) {
             throw new InvalidAuthenticationTokenException();
         }
 

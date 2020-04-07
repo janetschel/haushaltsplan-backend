@@ -1,4 +1,4 @@
-package com.heroku.backend;
+package com.heroku.backend.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -8,7 +8,7 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.SimpleMongoClientDbFactory;
 
 @Configuration
-public class MongoDBConfiguration {
+public class MongoDBConfig {
 
     @Value("${mongodb.uri}")
     private String mongoDbUri;
