@@ -16,17 +16,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class TaskService {
     public final TaskRepository taskRepository;
-    private MongoOperations mongoOperations;
 
-    @Autowired
     public TaskService(TaskRepository taskRepository) {
         this.taskRepository = taskRepository;
-        ApplicationContext applicationContext = new AnnotationConfigApplicationContext(MongoDBConfig.class);
-        mongoOperations = (MongoOperations) applicationContext.getBean("mongoTemplate");
     }
 
     public ResponseEntity<List<TaskEntity>> getDocuments(String authToken) throws InvalidAuthenticationTokenException {
@@ -47,9 +44,7 @@ public class TaskService {
 
         String message = "Task with ID '" + id + "' does already exist and could therefore not be created";
 
-        Query query = new Query();
-        query.addCriteria(Criteria.where("_id").is(id));
-        TaskEntity documentToAdd = mongoOperations.findOne(query, TaskEntity.class);
+        TaskEntity documentToAdd = taskRepository.findById(id).orElse(null);
 
         if (documentToAdd != null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
@@ -70,20 +65,22 @@ public class TaskService {
         String message =
                 "Task with ID '" + id + "' does not exist and could therefore not be updated. It was created instead";
 
-        Query query = new Query();
-        query.addCriteria(Criteria.where("_id").is(id));
-        TaskEntity documentToUpdate = mongoOperations.findOne(query, TaskEntity.class);
+        TaskEntity documentToUpdate = taskRepository.findById(id).orElse(null);
+        System.out.println(documentToUpdate);
 
         if (documentToUpdate == null) {
             addDocument(taskEntity, authToken);
             return ResponseEntity.status(HttpStatus.ACCEPTED).body(message);
         }
 
+        documentToUpdate.setId(null);
         documentToUpdate.setDay(taskEntity.getDay());
         documentToUpdate.setPic(taskEntity.getPic());
         documentToUpdate.setBlame(taskEntity.getBlame());
         documentToUpdate.setDone(taskEntity.isDone());
-        mongoOperations.save(documentToUpdate);
+
+        taskRepository.deleteById(id);
+        taskRepository.save(documentToUpdate);
 
         message = "Task updated successfully";
         return ResponseEntity.ok(message);
@@ -96,15 +93,13 @@ public class TaskService {
 
         String message = "Task with ID '" + id + "' does not exist and could therefore not be deleted";
 
-        Query query = new Query();
-        query.addCriteria(Criteria.where("_id").is(id));
-        TaskEntity documentToDelete = mongoOperations.findOne(query, TaskEntity.class);
+        TaskEntity documentToDelete = taskRepository.findById(id).orElse(null);
 
         if (documentToDelete == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(message);
         }
 
-        mongoOperations.remove(documentToDelete);
+        taskRepository.delete(documentToDelete);
 
         message = "Task deleted successfully";
         return ResponseEntity.ok(message);
