@@ -17,36 +17,26 @@ public class TaskController {
     }
 
     @GetMapping("/getDocuments")
-    public ResponseEntity<List<TaskEntity>> getDocuments(@RequestParam("token") String authToken) throws InvalidAuthenticationTokenException {
+    public ResponseEntity<List<TaskEntity>> getDocuments(@RequestHeader("Auth-Token") String authToken)
+            throws InvalidAuthenticationTokenException {
         return taskService.getDocuments(authToken);
     }
 
-    @GetMapping("/addDocument")
-    public ResponseEntity<String> addDocument(@RequestParam("day") String day,
-                                              @RequestParam("chore") String chore,
-                                              @RequestParam("pic") String pic,
-                                              @RequestParam("blame") String blame,
-                                              @RequestParam("done") boolean done,
-                                              @RequestParam("token") String authToken) throws InvalidAuthenticationTokenException {
-        TaskEntity taskEntity = new TaskEntity(day, chore, pic, blame, done);
+    @PostMapping("/addDocument")
+    public ResponseEntity<String> addDocument(@RequestBody TaskEntity taskEntity, @RequestHeader("Auth-Token") String authToken)
+            throws InvalidAuthenticationTokenException {
         return taskService.addDocument(taskEntity, authToken);
     }
 
-    @GetMapping("/updateDocument")
-    public ResponseEntity<String> updateDocument(@RequestParam("id") String id,
-                                                 @RequestParam("day") String day,
-                                                 @RequestParam("chore") String chore,
-                                                 @RequestParam("pic") String pic,
-                                                 @RequestParam("blame") String blame,
-                                                 @RequestParam("done") boolean done,
-                                                 @RequestParam("token") String authToken) throws InvalidAuthenticationTokenException {
-        TaskEntity taskEntity = new TaskEntity(id, day, chore, pic, blame, done);
+    @PutMapping("/updateDocument")
+    public ResponseEntity<String> updateDocument(@RequestBody TaskEntity taskEntity, @RequestHeader("Auth-Token") String authToken)
+            throws InvalidAuthenticationTokenException {
         return taskService.updateDocument(taskEntity, authToken);
     }
 
-    @GetMapping("/deleteDocument")
-    public ResponseEntity<String> deleteDocument(@RequestParam("id") String id,
-                                                 @RequestParam("token") String authToken) throws InvalidAuthenticationTokenException {
+    @DeleteMapping("/deleteDocument")
+    public ResponseEntity<String> deleteDocument(@RequestParam("id") String id, @RequestHeader("Auth-Token") String authToken)
+            throws InvalidAuthenticationTokenException {
         return taskService.deleteDocument(id, authToken);
     }
 }
