@@ -30,3 +30,4 @@ build/
 ### VS Code ###
 .vscode/
 src/main/resources/application-localhost.properties
+src/test/resources/com/heroku/backend/service/application-test.properties
