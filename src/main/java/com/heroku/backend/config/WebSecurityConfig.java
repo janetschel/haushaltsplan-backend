@@ -15,14 +15,15 @@ import java.util.Collections;
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.cors();
+        http.cors().configurationSource(corsConfigurationSource());
     }
 
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
-        corsConfiguration.setAllowedOrigins(Collections.singletonList("https://haushaltsplan.herokuapp.com/"));
-        corsConfiguration.setAllowedMethods(Arrays.asList("GET", "PUT", "POST", "DELETE"));
+        corsConfiguration.addAllowedOrigin("https://haushaltsplan.herokuapp.com/");
+        corsConfiguration.addAllowedHeader("*");
+        corsConfiguration.addAllowedMethod("*");
         UrlBasedCorsConfigurationSource urlBasedCorsConfigurationSource = new UrlBasedCorsConfigurationSource();
         urlBasedCorsConfigurationSource.registerCorsConfiguration("/**", corsConfiguration);
         return urlBasedCorsConfigurationSource;
