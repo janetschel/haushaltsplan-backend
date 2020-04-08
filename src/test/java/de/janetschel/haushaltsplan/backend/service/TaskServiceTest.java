@@ -85,7 +85,7 @@ public class TaskServiceTest {
         int statusCodeValueOnFailure = responseEntityOnFailure.getStatusCodeValue();
 
         Assertions.assertThat(bodyOnFailure).isEqualTo("Task with ID '1' does already exist and could therefore not be created");
-        Assertions.assertThat(statusCodeValueOnFailure).isEqualTo(400);
+        Assertions.assertThat(statusCodeValueOnFailure).isEqualTo(409);
 
         Mockito.verify(taskRepository, Mockito.times(2)).findById(taskEntity.getId());
         Mockito.verify(taskRepository, Mockito.times(1)).insert(taskEntity);

@@ -42,7 +42,7 @@ public class TaskService {
         TaskEntity documentToAdd = taskRepository.findById(id).orElse(null);
 
         if (documentToAdd != null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(message);
         }
 
         taskRepository.insert(taskEntity);
