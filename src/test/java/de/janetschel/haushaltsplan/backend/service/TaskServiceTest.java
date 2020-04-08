@@ -80,9 +80,9 @@ public class TaskServiceTest {
         // Testing failed add
         Mockito.when(taskRepository.findById(taskEntity.getId())).thenReturn(java.util.Optional.ofNullable(taskEntity));
 
-        ResponseEntity<String> responseEntityOnFailue = taskService.addDocument(taskEntity, authtoken);
-        String bodyOnFailure = responseEntityOnFailue.getBody();
-        int statusCodeValueOnFailure = responseEntityOnFailue.getStatusCodeValue();
+        ResponseEntity<String> responseEntityOnFailure = taskService.addDocument(taskEntity, authtoken);
+        String bodyOnFailure = responseEntityOnFailure.getBody();
+        int statusCodeValueOnFailure = responseEntityOnFailure.getStatusCodeValue();
 
         Assertions.assertThat(bodyOnFailure).isEqualTo("Task with ID '1' does already exist and could therefore not be created");
         Assertions.assertThat(statusCodeValueOnFailure).isEqualTo(400);
