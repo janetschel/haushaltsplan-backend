@@ -6,15 +6,9 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class ValueConfig {
 
-    public static String mongoDbUri;
     public static String authenticationToken;
     public static String base64FirstUser;
     public static String base64SecondUser;
-
-    @Value("${mongodb.uri}")
-    public void setMongoDbUri(String mongoDbUri) {
-        ValueConfig.mongoDbUri = mongoDbUri;
-    }
 
     @Value("${authentication.user}")
     public void setAuthenticationToken(String authenticationToken) {
