@@ -3,7 +3,7 @@ Backend for [private Haushaltsplaner-Tool](https://github.com/janetschel/haushal
 
 ### For a brief overview of the features check [here](https://github.com/janetschel/haushaltsplan-backend/releases/tag/v1.0.0)
 
-This backend interacts with a cloud-hostes MongoDb database to provide real-time production-save data
+This backend interacts with a cloud-hosted MongoDb database to provide real-time production-save data
 
 ## Status of deployment
 
