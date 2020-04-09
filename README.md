@@ -1,7 +1,7 @@
 # haushaltsplan-backend
 Private Haushaltsplaner-Tool
 
-### For an brief overview of the features check [here](https://github.com/janetschel/haushaltsplan/releases)
+### For an brief overview of the features check [here](https://github.com/janetschel/haushaltsplan-backend/releases/tag/v1.0.0)
 
 ## Status of deployment
 
