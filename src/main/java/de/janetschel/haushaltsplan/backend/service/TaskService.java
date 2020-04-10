@@ -73,6 +73,7 @@ public class TaskService {
         documentToUpdate.setPic(taskEntity.getPic());
         documentToUpdate.setBlame(taskEntity.getBlame());
         documentToUpdate.setDone(taskEntity.isDone());
+        documentToUpdate.setFeedback(taskEntity.getFeedback());
 
         taskRepository.deleteById(id);
         taskRepository.save(documentToUpdate);
