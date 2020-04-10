@@ -2,6 +2,7 @@ package de.janetschel.haushaltsplan.backend.controller;
 
 import de.janetschel.haushaltsplan.backend.service.HealthCheckService;
 import org.hamcrest.Matchers;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,7 @@ public class HealthCheckControllerTest {
     private HealthCheckService healthCheckService;
 
     @Test
+    @DisplayName("/healthcheck -> 200 OK")
     public void whenHealthcheck_thenOkMessage_andStatus200() throws Exception {
         Mockito.when(healthCheckService.healthCheck()).thenReturn(ResponseEntity.ok("Healthcheck ok"));
 

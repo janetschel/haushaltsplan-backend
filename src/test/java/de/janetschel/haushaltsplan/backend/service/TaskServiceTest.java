@@ -8,6 +8,7 @@ import lombok.SneakyThrows;
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -42,7 +43,7 @@ public class TaskServiceTest {
 
     @Test
     @SneakyThrows(InvalidAuthenticationTokenException.class)
-    public void givenValidAuthtoken_whenGetDocument_thenNoException() {
+    public void givenValidAuthtoken_whenGetDocuments_thenNoException() {
         List<TaskEntity> expectedTaskEntities = Collections.singletonList(new TaskEntity());
         Mockito.when(taskRepository.findAll()).thenReturn(expectedTaskEntities);
 
@@ -58,7 +59,7 @@ public class TaskServiceTest {
 
     @Test(expected = InvalidAuthenticationTokenException.class)
     @SneakyThrows(InvalidAuthenticationTokenException.class)
-    public void givenInvalidAuthtoken_whenGetDocument_thenInvalidAuthenticationTokenException() {
+    public void givenInvalidAuthtoken_whenGetDocuments_thenInvalidAuthenticationTokenException() {
         taskService.getDocuments("totally_wrong_authtoken");
     }
 
