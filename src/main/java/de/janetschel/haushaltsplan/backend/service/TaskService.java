@@ -1,6 +1,7 @@
 package de.janetschel.haushaltsplan.backend.service;
 
 import de.janetschel.haushaltsplan.backend.entity.TaskEntity;
+import de.janetschel.haushaltsplan.backend.enums.Feedback;
 import de.janetschel.haushaltsplan.backend.exception.InvalidAuthenticationTokenException;
 import de.janetschel.haushaltsplan.backend.repository.TaskRepository;
 import org.springframework.beans.factory.annotation.Value;
@@ -80,30 +81,22 @@ public class TaskService {
         return ResponseEntity.ok(message);
     }
 
-    public ResponseEntity<String> addFeedbackToDocument(String id, int feedback, String authToken)
+    public ResponseEntity<String> addFeedbackToDocument(String id, Feedback feedback, String authToken)
             throws InvalidAuthenticationTokenException {
         if (!authToken.equals(authtoken)) {
             throw new InvalidAuthenticationTokenException();
         }
 
-        String message = "Could not add feedback to task. Reason: Feedback must be a number between 0 and 10 inclusive";
-
-        if (feedback < 0 || feedback > 10) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
-        }
-
-        message = "Could not add feedback to task. Reason: Task with ID '" + id + "' does not exist";
-
         TaskEntity documentToAddFeedback = taskRepository.findById(id).orElse(null);
 
         if (documentToAddFeedback == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(message);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("Could not add feedback to task. Reason: Task with ID '" + id + "' does not exist");
         }
 
-        message = "Could not add feedback to task. Reason: Task with ID '" + id + "' is not completed yet";
-
         if (!documentToAddFeedback.isDone()) {
-            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(message);
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE)
+                    .body("Could not add feedback to task. Reason: Task with ID '" + id + "' is not completed yet");
         }
 
         documentToAddFeedback.setFeedback(feedback);
@@ -111,8 +104,7 @@ public class TaskService {
         taskRepository.deleteById(id);
         taskRepository.save(documentToAddFeedback);
 
-        message = "Feedback successfully added to task";
-        return ResponseEntity.ok(message);
+        return ResponseEntity.ok("Feedback successfully added to task");
     }
 
     public ResponseEntity<String> deleteDocument(String id, String authToken) throws InvalidAuthenticationTokenException {

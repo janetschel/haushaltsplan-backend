@@ -1,6 +1,7 @@
 package de.janetschel.haushaltsplan.backend.controller;
 
 import de.janetschel.haushaltsplan.backend.entity.TaskEntity;
+import de.janetschel.haushaltsplan.backend.enums.Feedback;
 import de.janetschel.haushaltsplan.backend.exception.InvalidAuthenticationTokenException;
 import de.janetschel.haushaltsplan.backend.service.TaskService;
 import org.springframework.http.ResponseEntity;
@@ -36,7 +37,7 @@ public class TaskController {
 
     @PutMapping("/updateDocument/addFeedback/{id}")
     public ResponseEntity<String> addFeedbackToDocument(@PathVariable("id") String id,
-                                                        @RequestParam("feedback") int feedback,
+                                                        @RequestParam("feedback") Feedback feedback,
                                                         @RequestHeader("Auth-Token") String authToken)
             throws InvalidAuthenticationTokenException{
         return taskService.addFeedbackToDocument(id, feedback, authToken);

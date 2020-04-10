@@ -1,6 +1,7 @@
 package de.janetschel.haushaltsplan.backend.service;
 
 import de.janetschel.haushaltsplan.backend.entity.TaskEntity;
+import de.janetschel.haushaltsplan.backend.enums.Feedback;
 import de.janetschel.haushaltsplan.backend.exception.InvalidAuthenticationTokenException;
 import de.janetschel.haushaltsplan.backend.repository.TaskRepository;
 import lombok.SneakyThrows;
@@ -36,7 +37,7 @@ public class TaskServiceTest {
     @Before
     public void setupTests() {
         ReflectionTestUtils.setField(taskService, "authtoken", authtoken);
-        taskEntity = new TaskEntity("1", "monday", "Kochen", "Jan", "Jan", false, -1);
+        taskEntity = new TaskEntity("1", "monday", "Kochen", "Jan", "Jan", false, Feedback.GOOD);
     }
 
     @Test

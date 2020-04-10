@@ -3,6 +3,7 @@ package de.janetschel.haushaltsplan.backend.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.janetschel.haushaltsplan.backend.entity.TaskEntity;
+import de.janetschel.haushaltsplan.backend.enums.Feedback;
 import de.janetschel.haushaltsplan.backend.exception.InvalidAuthenticationTokenException;
 import de.janetschel.haushaltsplan.backend.service.TaskService;
 import org.hamcrest.Matchers;
@@ -34,7 +35,7 @@ public class TaskControllerTest {
 
     @BeforeEach
     public void setupTests() {
-        taskEntity = new TaskEntity("id", "monday", "Kochen", "Jan", "Jan", false, -1);
+        taskEntity = new TaskEntity("id", "monday", "Kochen", "Jan", "Jan", false, Feedback.GOOD);
         id = "id";
     }
 

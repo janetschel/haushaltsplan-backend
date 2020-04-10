@@ -1,5 +1,6 @@
 package de.janetschel.haushaltsplan.backend.entity;
 
+import de.janetschel.haushaltsplan.backend.enums.Feedback;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,7 +23,7 @@ public class TaskEntity {
     private String pic;
     private String blame;
     private boolean done;
-    private int feedback;
+    private Feedback feedback = Feedback.NO_FEEDBACK_GIVEN;
 
     public TaskEntity(String day, String chore, String pic, String blame, boolean done) {
         this.day = day;
@@ -30,6 +31,5 @@ public class TaskEntity {
         this.pic = pic;
         this.blame = blame;
         this.done = done;
-        this.feedback = -1;
     }
 }
