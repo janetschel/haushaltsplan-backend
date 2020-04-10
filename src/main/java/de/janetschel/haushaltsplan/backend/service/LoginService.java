@@ -33,12 +33,8 @@ public class LoginService {
 
     @Scheduled(cron = "*/20 * * * * *")
     private void resetAttempts() {
-        LOGGER.info("Reset attempts for login. Accepting all requests now.");
-
         if (attempts >= 10) {
             LOGGER.warn(attempts + " attempts made since the last reset.");
-        } else {
-            LOGGER.info(attempts + " attempts made since the last reset. No indication of any attacks.");
         }
 
         attempts = 0;
