@@ -34,7 +34,7 @@ public class TaskControllerTest {
 
     @BeforeEach
     public void setupTests() {
-        taskEntity = new TaskEntity("id", "monday", "Kochen", "Jan", "Jan", false);
+        taskEntity = new TaskEntity("id", "monday", "Kochen", "Jan", "Jan", false, -1);
         id = "id";
     }
 

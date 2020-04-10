@@ -80,6 +80,41 @@ public class TaskService {
         return ResponseEntity.ok(message);
     }
 
+    public ResponseEntity<String> addFeedbackToDocument(String id, int feedback, String authToken)
+            throws InvalidAuthenticationTokenException {
+        if (!authToken.equals(authtoken)) {
+            throw new InvalidAuthenticationTokenException();
+        }
+
+        String message = "Could not add feedback to task. Reason: Feedback must be a number between 0 and 10 inclusive";
+
+        if (feedback < 0 || feedback > 10) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
+        }
+
+        message = "Could not add feedback to task. Reason: Task with ID '" + id + "' does not exist";
+
+        TaskEntity documentToAddFeedback = taskRepository.findById(id).orElse(null);
+
+        if (documentToAddFeedback == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(message);
+        }
+
+        message = "Could not add feedback to task. Reason: Task with ID '" + id + "' is not completed yet";
+
+        if (!documentToAddFeedback.isDone()) {
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(message);
+        }
+
+        documentToAddFeedback.setFeedback(feedback);
+
+        taskRepository.deleteById(id);
+        taskRepository.save(documentToAddFeedback);
+
+        message = "Feedback successfully added to task";
+        return ResponseEntity.ok(message);
+    }
+
     public ResponseEntity<String> deleteDocument(String id, String authToken) throws InvalidAuthenticationTokenException {
         if (!authToken.equals(authtoken)) {
             throw new InvalidAuthenticationTokenException();

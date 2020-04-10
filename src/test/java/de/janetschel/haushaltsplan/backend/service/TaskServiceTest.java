@@ -36,7 +36,7 @@ public class TaskServiceTest {
     @Before
     public void setupTests() {
         ReflectionTestUtils.setField(taskService, "authtoken", authtoken);
-        taskEntity = new TaskEntity("1", "monday", "Kochen", "Jan", "Jan", false);
+        taskEntity = new TaskEntity("1", "monday", "Kochen", "Jan", "Jan", false, -1);
     }
 
     @Test

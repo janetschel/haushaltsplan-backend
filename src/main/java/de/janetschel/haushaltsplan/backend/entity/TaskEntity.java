@@ -22,6 +22,7 @@ public class TaskEntity {
     private String pic;
     private String blame;
     private boolean done;
+    private int feedback;
 
     public TaskEntity(String day, String chore, String pic, String blame, boolean done) {
         this.day = day;
@@ -29,5 +30,6 @@ public class TaskEntity {
         this.pic = pic;
         this.blame = blame;
         this.done = done;
+        this.feedback = -1;
     }
 }

@@ -34,6 +34,14 @@ public class TaskController {
         return taskService.updateDocument(taskEntity, authToken);
     }
 
+    @PutMapping("/updateDocument/addFeedback/{id}")
+    public ResponseEntity<String> addFeedbackToDocument(@PathVariable("id") String id,
+                                                        @RequestParam("feedback") int feedback,
+                                                        @RequestHeader("Auth-Token") String authToken)
+            throws InvalidAuthenticationTokenException{
+        return taskService.addFeedbackToDocument(id, feedback, authToken);
+    }
+
     @DeleteMapping("/deleteDocument")
     public ResponseEntity<String> deleteDocument(@RequestParam("id") String id, @RequestHeader("Auth-Token") String authToken)
             throws InvalidAuthenticationTokenException {
