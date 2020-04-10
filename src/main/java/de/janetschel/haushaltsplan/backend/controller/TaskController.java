@@ -36,8 +36,8 @@ public class TaskController {
     }
 
     @PutMapping("/updateDocument/addFeedback/{id}")
-    public ResponseEntity<String> addFeedbackToDocument(@PathVariable("id") String id,
-                                                        @RequestParam("feedback") Feedback feedback,
+    public ResponseEntity<String> addFeedbackToDocument(@RequestParam("feedback") Feedback feedback,
+                                                        @PathVariable("id") String id,
                                                         @RequestHeader("Auth-Token") String authToken)
             throws InvalidAuthenticationTokenException{
         return taskService.addFeedbackToDocument(id, feedback, authToken);
