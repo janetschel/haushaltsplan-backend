@@ -8,11 +8,13 @@ import de.janetschel.haushaltsplan.backend.exception.InvalidAuthenticationTokenE
 import de.janetschel.haushaltsplan.backend.service.TaskService;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
@@ -156,7 +158,7 @@ public class TaskControllerTest {
         Mockito.when(taskService.updateDocument(taskEntity, authtoken)).thenReturn(ResponseEntity.ok("Update successful"));
 
         this.mockMvc.perform(MockMvcRequestBuilders
-                    .put("/updateDocument").contentType(MediaType.APPLICATION_JSON).content(taskEntityAsJson(taskEntity)))
+                .put("/updateDocument").contentType(MediaType.APPLICATION_JSON).content(taskEntityAsJson(taskEntity)))
                 .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isBadRequest());
 
         Mockito.verify(taskService, Mockito.never()).updateDocument(taskEntity, authtoken);
@@ -171,6 +173,87 @@ public class TaskControllerTest {
                 .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isBadRequest());
 
         Mockito.verify(taskService, Mockito.never()).updateDocument(taskEntity, authtoken);
+    }
+
+    @Test
+    public void givenValidHeader_whenAddFeedbackToDocument_thenStatus200() throws Exception {
+        String authtoken = "wrongauthtoken";
+        Mockito.when(taskService.addFeedbackToDocument(taskEntity.getId(), taskEntity.getFeedback(), authtoken))
+                .thenReturn(ResponseEntity.ok("Feedback added successfully"));
+
+        this.mockMvc.perform(MockMvcRequestBuilders
+                    .put("/updateDocument/addFeedback/id")
+                    .param("feedback", taskEntity.getFeedback().getValue())
+                    .header("Auth-Token", authtoken))
+                .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().string(Matchers.containsString("Feedback added successfully")));
+
+        Mockito.verify(taskService, Mockito.times(1))
+                .addFeedbackToDocument(taskEntity.getId(), taskEntity.getFeedback(), authtoken);
+    }
+
+    @Test
+    public void givenInvalidHeader_whenAddFeedbackToDocument_thenStatus403() throws Exception {
+        String authtoken = "wrongauthtoken";
+        Mockito.when(taskService.addFeedbackToDocument(taskEntity.getId(), taskEntity.getFeedback(), authtoken))
+                .thenThrow(InvalidAuthenticationTokenException.class);
+
+        this.mockMvc.perform(MockMvcRequestBuilders
+                    .put("/updateDocument/addFeedback/id")
+                    .param("feedback", taskEntity.getFeedback().getValue())
+                    .header("Auth-Token", authtoken))
+                .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isForbidden());
+
+        Mockito.verify(taskService, Mockito.times(1))
+                .addFeedbackToDocument(taskEntity.getId(), taskEntity.getFeedback(), authtoken);
+    }
+
+    @Test
+    public void givenNoHeader_whenAddFeedbackToDocument_thenStatus400() throws Exception {
+        String authtoken = "authtoken";
+        Mockito.when(taskService.addFeedbackToDocument(taskEntity.getId(), taskEntity.getFeedback(), authtoken))
+                .thenReturn(ResponseEntity.ok("Added feedback successfully"));
+
+        this.mockMvc.perform(MockMvcRequestBuilders
+                    .put("/updateDocument/addFeedback/id")
+                    .param("feedback", taskEntity.getFeedback().getValue()))
+                .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isBadRequest());
+
+        Mockito.verify(taskService, Mockito.never()).addFeedbackToDocument(taskEntity.getId(), taskEntity.getFeedback(), authtoken);
+    }
+
+    @Test
+    public void givenNotExistingId_whenAddFeedbackToDocument_thenStatus404() throws Exception {
+        String authtoken = "wrongauthtoken";
+        Mockito.when(taskService.addFeedbackToDocument(taskEntity.getId(), taskEntity.getFeedback(), authtoken))
+                .thenReturn(ResponseEntity.status(HttpStatus.NOT_FOUND).body("Id does not exist"));
+
+        this.mockMvc.perform(MockMvcRequestBuilders
+                    .put("/updateDocument/addFeedback/id")
+                    .param("feedback", taskEntity.getFeedback().getValue())
+                    .header("Auth-Token", authtoken))
+                .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andExpect(MockMvcResultMatchers.content().string(Matchers.containsString("Id does not exist")));
+
+        Mockito.verify(taskService, Mockito.times(1))
+                .addFeedbackToDocument(taskEntity.getId(), taskEntity.getFeedback(), authtoken);
+    }
+
+    @Test
+    public void givenInvalidId_whenAddFeedbackToDocument_thenStatus404() throws Exception {
+        String authtoken = "wrongauthtoken";
+        Mockito.when(taskService.addFeedbackToDocument(taskEntity.getId(), taskEntity.getFeedback(), authtoken))
+                .thenReturn(ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("Task is not done"));
+
+        this.mockMvc.perform(MockMvcRequestBuilders
+                    .put("/updateDocument/addFeedback/id")
+                    .param("feedback", taskEntity.getFeedback().getValue())
+                    .header("Auth-Token", authtoken))
+                .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isNotAcceptable())
+                .andExpect(MockMvcResultMatchers.content().string(Matchers.containsString("Task is not done")));
+
+        Mockito.verify(taskService, Mockito.times(1))
+                .addFeedbackToDocument(taskEntity.getId(), taskEntity.getFeedback(), authtoken);
     }
 
     @Test
@@ -222,7 +305,6 @@ public class TaskControllerTest {
 
         Mockito.verify(taskService, Mockito.never()).deleteDocument(id, authtoken);
     }
-
 
     private String taskEntityAsJson(TaskEntity taskEntity) {
         String stringToReturn = "";
