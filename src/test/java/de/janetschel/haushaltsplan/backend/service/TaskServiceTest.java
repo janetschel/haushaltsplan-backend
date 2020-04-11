@@ -1,12 +1,14 @@
 package de.janetschel.haushaltsplan.backend.service;
 
 import de.janetschel.haushaltsplan.backend.entity.TaskEntity;
+import de.janetschel.haushaltsplan.backend.enums.Feedback;
 import de.janetschel.haushaltsplan.backend.exception.InvalidAuthenticationTokenException;
 import de.janetschel.haushaltsplan.backend.repository.TaskRepository;
 import lombok.SneakyThrows;
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -36,12 +38,12 @@ public class TaskServiceTest {
     @Before
     public void setupTests() {
         ReflectionTestUtils.setField(taskService, "authtoken", authtoken);
-        taskEntity = new TaskEntity("1", "monday", "Kochen", "Jan", "Jan", false);
+        taskEntity = new TaskEntity("1", "monday", "Kochen", "Jan", "Jan", false, Feedback.GOOD);
     }
 
     @Test
     @SneakyThrows(InvalidAuthenticationTokenException.class)
-    public void givenValidAuthtoken_whenGetDocument_thenNoException() {
+    public void givenValidAuthtoken_whenGetDocuments_thenNoException() {
         List<TaskEntity> expectedTaskEntities = Collections.singletonList(new TaskEntity());
         Mockito.when(taskRepository.findAll()).thenReturn(expectedTaskEntities);
 
@@ -57,7 +59,7 @@ public class TaskServiceTest {
 
     @Test(expected = InvalidAuthenticationTokenException.class)
     @SneakyThrows(InvalidAuthenticationTokenException.class)
-    public void givenInvalidAuthtoken_whenGetDocument_thenInvalidAuthenticationTokenException() {
+    public void givenInvalidAuthtoken_whenGetDocuments_thenInvalidAuthenticationTokenException() {
         taskService.getDocuments("totally_wrong_authtoken");
     }
 
@@ -136,6 +138,66 @@ public class TaskServiceTest {
     @SneakyThrows(InvalidAuthenticationTokenException.class)
     public void givenInvalidAuthtoken_whenUpdateDocument_thenInvalidAuthenticationTokenException() {
         taskService.updateDocument(taskEntity, "totally_wrong_authtoken");
+    }
+
+    @Test
+    @SneakyThrows(InvalidAuthenticationTokenException.class)
+    public void givenValidAuthtoken_whenAddFeedbackToDocument_thenNoException() {
+        // Testing successful adding of feedback
+        taskEntity.setDone(true);
+        Mockito.when(taskRepository.findById(taskEntity.getId())).thenReturn(java.util.Optional.ofNullable(taskEntity));
+
+        ResponseEntity<String> responseEntityOnSuccess =
+                taskService.addFeedbackToDocument(taskEntity.getId(), taskEntity.getFeedback(), authtoken);
+        String bodyOnSuccess = responseEntityOnSuccess.getBody();
+        int statusCodeValueOnSuccess = responseEntityOnSuccess.getStatusCodeValue();
+
+        Assertions.assertThat(bodyOnSuccess).isEqualTo("Feedback successfully added to task");
+        Assertions.assertThat(statusCodeValueOnSuccess).isEqualTo(200);
+
+        Mockito.verify(taskRepository, Mockito.times(1)).findById("1");
+        Mockito.verify(taskRepository, Mockito.times(1)).deleteById("1");
+        Mockito.verify(taskRepository, Mockito.times(1)).save(taskEntity);
+
+        // Testing failed adding of feedback
+        // 404
+        taskEntity.setDone(false);
+        Mockito.when(taskRepository.findById(taskEntity.getId())).thenReturn(java.util.Optional.empty());
+
+        ResponseEntity<String> responseEntityOnFailure =
+                taskService.addFeedbackToDocument(taskEntity.getId(), taskEntity.getFeedback(), authtoken);
+        String bodyOnFailure = responseEntityOnFailure.getBody();
+        int statusCodeValueOnFailure = responseEntityOnFailure.getStatusCodeValue();
+
+        Assertions.assertThat(bodyOnFailure)
+                .isEqualTo("Could not add feedback to task. Reason: Task with ID '1' does not exist");
+        Assertions.assertThat(statusCodeValueOnFailure).isEqualTo(404);
+
+        Mockito.verify(taskRepository, Mockito.times(2)).findById("1");
+        Mockito.verify(taskRepository, Mockito.times(1)).deleteById("1");
+        Mockito.verify(taskRepository, Mockito.times(1)).save(taskEntity);
+
+        // 406
+        Mockito.when(taskRepository.findById(taskEntity.getId())).thenReturn(java.util.Optional.ofNullable(taskEntity));
+
+        ResponseEntity<String> responseEntityOnFailure2 =
+                taskService.addFeedbackToDocument(taskEntity.getId(), taskEntity.getFeedback(), authtoken);
+        String bodyOnFailure2 = responseEntityOnFailure2.getBody();
+        int statusCodeValueOnFailure2 = responseEntityOnFailure2.getStatusCodeValue();
+
+        Assertions.assertThat(bodyOnFailure2)
+                .isEqualTo("Could not add feedback to task. Reason: Task with ID '1' is not completed yet");
+        Assertions.assertThat(statusCodeValueOnFailure2).isEqualTo(406);
+
+        Mockito.verify(taskRepository, Mockito.times(3)).findById("1");
+        Mockito.verify(taskRepository, Mockito.times(1)).deleteById("1");
+        Mockito.verify(taskRepository, Mockito.times(1)).save(taskEntity);
+    }
+
+    @Test(expected = InvalidAuthenticationTokenException.class)
+    @SneakyThrows(InvalidAuthenticationTokenException.class)
+    public void givenInvalidAuthtoken_whenAddFeedbackToDocument_thenInvalidAuthenticationTokenException() {
+        taskService.addFeedbackToDocument(taskEntity.getId(), taskEntity.getFeedback(), "totally_wrong_authtoken");
     }
 
     @Test

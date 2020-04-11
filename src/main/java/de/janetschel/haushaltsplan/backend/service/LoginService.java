@@ -1,6 +1,5 @@
 package de.janetschel.haushaltsplan.backend.service;
 
-import de.janetschel.haushaltsplan.backend.App;
 import de.janetschel.haushaltsplan.backend.config.ValueConfig;
 import de.janetschel.haushaltsplan.backend.exception.TooManyRequestsException;
 import org.slf4j.Logger;

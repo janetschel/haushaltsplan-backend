@@ -1,6 +1,7 @@
 package de.janetschel.haushaltsplan.backend.service;
 
 import de.janetschel.haushaltsplan.backend.entity.TaskEntity;
+import de.janetschel.haushaltsplan.backend.enums.Feedback;
 import de.janetschel.haushaltsplan.backend.exception.InvalidAuthenticationTokenException;
 import de.janetschel.haushaltsplan.backend.repository.TaskRepository;
 import org.springframework.beans.factory.annotation.Value;
@@ -72,12 +73,39 @@ public class TaskService {
         documentToUpdate.setPic(taskEntity.getPic());
         documentToUpdate.setBlame(taskEntity.getBlame());
         documentToUpdate.setDone(taskEntity.isDone());
+        documentToUpdate.setFeedback(taskEntity.getFeedback());
 
         taskRepository.deleteById(id);
         taskRepository.save(documentToUpdate);
 
         message = "Task updated successfully";
         return ResponseEntity.ok(message);
+    }
+
+    public ResponseEntity<String> addFeedbackToDocument(String id, Feedback feedback, String authToken)
+            throws InvalidAuthenticationTokenException {
+        if (!authToken.equals(authtoken)) {
+            throw new InvalidAuthenticationTokenException();
+        }
+
+        TaskEntity documentToAddFeedback = taskRepository.findById(id).orElse(null);
+
+        if (documentToAddFeedback == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("Could not add feedback to task. Reason: Task with ID '" + id + "' does not exist");
+        }
+
+        if (!documentToAddFeedback.isDone()) {
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE)
+                    .body("Could not add feedback to task. Reason: Task with ID '" + id + "' is not completed yet");
+        }
+
+        documentToAddFeedback.setFeedback(feedback);
+
+        taskRepository.deleteById(id);
+        taskRepository.save(documentToAddFeedback);
+
+        return ResponseEntity.ok("Feedback successfully added to task");
     }
 
     public ResponseEntity<String> deleteDocument(String id, String authToken) throws InvalidAuthenticationTokenException {
