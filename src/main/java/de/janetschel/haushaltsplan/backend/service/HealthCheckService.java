@@ -13,8 +13,7 @@ public class HealthCheckService {
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
         LocalDateTime localDateTime = LocalDateTime.now();
 
-        String response = "Healthcheck completed at " + dateTimeFormatter.format(localDateTime);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok("Healthcheck completed at " + dateTimeFormatter.format(localDateTime));
     }
 
 }

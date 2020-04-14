@@ -38,18 +38,15 @@ public class TaskService {
         String id = taskEntity.getId();
         id = id == null ? "0" : id;
 
-        String message = "Task with ID '" + id + "' does already exist and could therefore not be created";
-
         TaskEntity documentToAdd = taskRepository.findById(id).orElse(null);
 
         if (documentToAdd != null) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(message);
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body("Task with ID '" + id + "' does already exist and could therefore not be created");
         }
 
         taskRepository.insert(taskEntity);
-
-        message = "Task added successfully";
-        return ResponseEntity.status(HttpStatus.CREATED).body(message);
+        return ResponseEntity.status(HttpStatus.CREATED).body("Task added successfully");
     }
 
     public ResponseEntity<String> updateDocument(TaskEntity taskEntity, String authToken) throws InvalidAuthenticationTokenException {
@@ -58,14 +55,12 @@ public class TaskService {
         }
 
         String id = taskEntity.getId();
-        String message =
-                "Task with ID '" + id + "' does not exist and could therefore not be updated. It was created instead";
-
         TaskEntity documentToUpdate = taskRepository.findById(id).orElse(null);
 
         if (documentToUpdate == null) {
             addDocument(taskEntity, authToken);
-            return ResponseEntity.status(HttpStatus.ACCEPTED).body(message);
+            return ResponseEntity.status(HttpStatus.ACCEPTED)
+                    .body("Task with ID '" + id + "' does not exist and could therefore not be updated. It was created instead");
         }
 
         documentToUpdate.setId(null);
@@ -78,8 +73,7 @@ public class TaskService {
         taskRepository.deleteById(id);
         taskRepository.save(documentToUpdate);
 
-        message = "Task updated successfully";
-        return ResponseEntity.ok(message);
+        return ResponseEntity.ok("Task updated successfully");
     }
 
     public ResponseEntity<String> addFeedbackToDocument(String id, Feedback feedback, String authToken)
@@ -113,17 +107,14 @@ public class TaskService {
             throw new InvalidAuthenticationTokenException();
         }
 
-        String message = "Task with ID '" + id + "' does not exist and could therefore not be deleted";
-
         TaskEntity documentToDelete = taskRepository.findById(id).orElse(null);
 
         if (documentToDelete == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(message);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("Task with ID '" + id + "' does not exist and could therefore not be deleted");
         }
 
         taskRepository.delete(documentToDelete);
-
-        message = "Task deleted successfully";
-        return ResponseEntity.ok(message);
+        return ResponseEntity.ok("Task deleted successfully");
     }
 }
