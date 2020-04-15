@@ -2,6 +2,7 @@ package de.janetschel.haushaltsplan.backend.controller;
 
 import de.janetschel.haushaltsplan.backend.exception.TooManyRequestsException;
 import de.janetschel.haushaltsplan.backend.service.LoginService;
+import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -18,5 +19,10 @@ public class LoginController {
     @GetMapping("/login")
     public ResponseEntity<Boolean> loginUser(@RequestHeader("Auth-String") String base64String) throws TooManyRequestsException {
         return loginService.loginUser(base64String);
+    }
+
+    @GetMapping("/login/validThru")
+    public ResponseEntity<String> loginValidThru(@RequestHeader("Auth-String") String base64String) {
+        return loginService.loginValidThru(base64String);
     }
 }
