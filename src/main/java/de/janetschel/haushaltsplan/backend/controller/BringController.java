@@ -23,6 +23,6 @@ public class BringController {
     @PutMapping("/bring/api/addProduct")
     public ResponseEntity<String> addProductToSharedBringList(@RequestBody Product product, @RequestHeader("Auth-Token") String authToken)
             throws UserNotLoggedInException, LoginExpiredException, InvalidAuthenticationTokenException {
-        return bringService.addProductToList(product, authToken);
+        return bringService.addProductToSharedBringList(product, authToken);
     }
 }

@@ -27,7 +27,7 @@ public class BringService {
     @Value("${authentication.user}")
     private String authtoken;
 
-    public ResponseEntity<String> addProductToList(Product prodcut, String authToken)
+    public ResponseEntity<String> addProductToSharedBringList(Product prodcut, String authToken)
             throws LoginExpiredException, UserNotLoggedInException, InvalidAuthenticationTokenException {
 
         LoginService.checkIfLoginIsExpired();
