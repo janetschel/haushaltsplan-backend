@@ -8,6 +8,7 @@ import lombok.SneakyThrows;
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -19,6 +20,7 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 
@@ -35,10 +37,19 @@ public class TaskServiceTest {
     private String authtoken;
     private TaskEntity taskEntity;
 
+    private static String property;
+
     @Before
     public void setupTests() {
         ReflectionTestUtils.setField(taskService, "authtoken", authtoken);
         taskEntity = new TaskEntity("1", "monday", "Kochen", "Jan", "Jan", false, Feedback.GOOD);
+        property = System.getProperty("login.valid.thru");
+        System.setProperty("login.valid.thru", LocalDateTime.now().plusMinutes(10).toString());
+    }
+
+    @AfterAll
+    public static void a() {
+        System.setProperty("login.valid.thru", property);
     }
 
     @Test
