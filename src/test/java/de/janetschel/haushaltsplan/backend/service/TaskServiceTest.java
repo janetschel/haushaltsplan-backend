@@ -3,11 +3,15 @@ package de.janetschel.haushaltsplan.backend.service;
 import de.janetschel.haushaltsplan.backend.entity.TaskEntity;
 import de.janetschel.haushaltsplan.backend.enums.Feedback;
 import de.janetschel.haushaltsplan.backend.exception.InvalidAuthenticationTokenException;
+import de.janetschel.haushaltsplan.backend.exception.LoginExpiredException;
+import de.janetschel.haushaltsplan.backend.exception.UserNotLoggedInException;
 import de.janetschel.haushaltsplan.backend.repository.TaskRepository;
 import lombok.SneakyThrows;
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -19,11 +23,12 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 
 @RunWith(SpringRunner.class)
-@TestPropertySource(locations= "application-test.properties")
+@TestPropertySource(locations = "application-test.properties")
 public class TaskServiceTest {
     @InjectMocks
     private TaskService taskService;
@@ -35,14 +40,23 @@ public class TaskServiceTest {
     private String authtoken;
     private TaskEntity taskEntity;
 
+    private static String property;
+
     @Before
     public void setupTests() {
         ReflectionTestUtils.setField(taskService, "authtoken", authtoken);
         taskEntity = new TaskEntity("1", "monday", "Kochen", "Jan", "Jan", false, Feedback.GOOD);
+        property = System.getProperty("login.valid.thru");
+        System.setProperty("login.valid.thru", LocalDateTime.now().plusMinutes(10).toString());
+    }
+
+    @AfterAll
+    public static void afterTests() {
+        System.setProperty("login.valid.thru", property);
     }
 
     @Test
-    @SneakyThrows(InvalidAuthenticationTokenException.class)
+    @SneakyThrows
     public void givenValidAuthtoken_whenGetDocuments_thenNoException() {
         List<TaskEntity> expectedTaskEntities = Collections.singletonList(new TaskEntity());
         Mockito.when(taskRepository.findAll()).thenReturn(expectedTaskEntities);
@@ -58,13 +72,27 @@ public class TaskServiceTest {
     }
 
     @Test(expected = InvalidAuthenticationTokenException.class)
-    @SneakyThrows(InvalidAuthenticationTokenException.class)
+    @SneakyThrows
     public void givenInvalidAuthtoken_whenGetDocuments_thenInvalidAuthenticationTokenException() {
         taskService.getDocuments("totally_wrong_authtoken");
     }
 
+    @Test(expected = UserNotLoggedInException.class)
+    @SneakyThrows
+    public void givenNoLogin_whenGetDocuments_thenUserNotLoggedInException() {
+        System.clearProperty("login.valid.thru");
+        taskService.getDocuments("totally_wrong_authtoken");
+    }
+
+    @Test(expected = LoginExpiredException.class)
+    @SneakyThrows
+    public void givenExpiredLogin_whenGetDocuments_thenLoginExpiredException() {
+        System.setProperty("login.valid.thru", LocalDateTime.now().minusMinutes(1).toString());
+        taskService.getDocuments("totally_wrong_authtoken");
+    }
+
     @Test
-    @SneakyThrows(InvalidAuthenticationTokenException.class)
+    @SneakyThrows
     public void givenValidAuthtoken_whenAddDocument_thenNoException() {
         // Testing successful add
         Mockito.when(taskRepository.findById(taskEntity.getId())).thenReturn(java.util.Optional.empty());
@@ -94,13 +122,27 @@ public class TaskServiceTest {
     }
 
     @Test(expected = InvalidAuthenticationTokenException.class)
-    @SneakyThrows(InvalidAuthenticationTokenException.class)
+    @SneakyThrows
     public void givenInvalidAuthtoken_whenAddDocument_thenInvalidAuthenticationTokenException() {
         taskService.addDocument(taskEntity, "totally_wrong_authtoken");
     }
 
+    @Test(expected = UserNotLoggedInException.class)
+    @SneakyThrows
+    public void givenNoLogin_whenAddDocument_thenUserNotLoggedInException() {
+        System.clearProperty("login.valid.thru");
+        taskService.addDocument(taskEntity, "totally_wrong_authtoken");
+    }
+
+    @Test(expected = LoginExpiredException.class)
+    @SneakyThrows
+    public void givenExpiredLogin_whenAddDocument_thenLoginExpiredException() {
+        System.setProperty("login.valid.thru", LocalDateTime.now().minusMinutes(1).toString());
+        taskService.addDocument(taskEntity, "totally_wrong_authtoken");
+    }
+
     @Test
-    @SneakyThrows(InvalidAuthenticationTokenException.class)
+    @SneakyThrows
     public void givenValidAuthtoken_whenUpdateDocument_thenNoException() {
         // Testing successful update
         Mockito.when(taskRepository.findById(taskEntity.getId())).thenReturn(java.util.Optional.ofNullable(taskEntity));
@@ -135,13 +177,27 @@ public class TaskServiceTest {
     }
 
     @Test(expected = InvalidAuthenticationTokenException.class)
-    @SneakyThrows(InvalidAuthenticationTokenException.class)
+    @SneakyThrows
     public void givenInvalidAuthtoken_whenUpdateDocument_thenInvalidAuthenticationTokenException() {
         taskService.updateDocument(taskEntity, "totally_wrong_authtoken");
     }
 
+    @Test(expected = UserNotLoggedInException.class)
+    @SneakyThrows
+    public void givenNoLogin_whenUpdateDocument_thenUserNotLoggedInException() {
+        System.clearProperty("login.valid.thru");
+        taskService.updateDocument(taskEntity, "totally_wrong_authtoken");
+    }
+
+    @Test(expected = LoginExpiredException.class)
+    @SneakyThrows
+    public void givenExpiredLogin_whenUpdateDocument_thenLoginExpiredException() {
+        System.setProperty("login.valid.thru", LocalDateTime.now().minusMinutes(1).toString());
+        taskService.updateDocument(taskEntity, "totally_wrong_authtoken");
+    }
+
     @Test
-    @SneakyThrows(InvalidAuthenticationTokenException.class)
+    @SneakyThrows
     public void givenValidAuthtoken_whenAddFeedbackToDocument_thenNoException() {
         // Testing successful adding of feedback
         taskEntity.setDone(true);
@@ -195,13 +251,27 @@ public class TaskServiceTest {
     }
 
     @Test(expected = InvalidAuthenticationTokenException.class)
-    @SneakyThrows(InvalidAuthenticationTokenException.class)
+    @SneakyThrows
     public void givenInvalidAuthtoken_whenAddFeedbackToDocument_thenInvalidAuthenticationTokenException() {
         taskService.addFeedbackToDocument(taskEntity.getId(), taskEntity.getFeedback(), "totally_wrong_authtoken");
     }
 
+    @Test(expected = UserNotLoggedInException.class)
+    @SneakyThrows
+    public void givenNoLogin_whenAddFeedbackToDocument_thenUserNotLoggedInException() {
+        System.clearProperty("login.valid.thru");
+        taskService.addFeedbackToDocument(taskEntity.getId(), taskEntity.getFeedback(), "totally_wrong_authtoken");
+    }
+
+    @Test(expected = LoginExpiredException.class)
+    @SneakyThrows
+    public void givenExpiredLogin_whenAddFeedbackToDocument_thenLoginExpiredException() {
+        System.setProperty("login.valid.thru", LocalDateTime.now().minusMinutes(1).toString());
+        taskService.addFeedbackToDocument(taskEntity.getId(), taskEntity.getFeedback(), "totally_wrong_authtoken");
+    }
+
     @Test
-    @SneakyThrows(InvalidAuthenticationTokenException.class)
+    @SneakyThrows
     public void givenValidAuthtoken_whenDeleteDocument_thenNoException() {
         // Testing successful delete
         Mockito.when(taskRepository.findById(taskEntity.getId())).thenReturn(java.util.Optional.ofNullable(taskEntity));
@@ -229,8 +299,22 @@ public class TaskServiceTest {
     }
 
     @Test(expected = InvalidAuthenticationTokenException.class)
-    @SneakyThrows(InvalidAuthenticationTokenException.class)
+    @SneakyThrows
     public void givenInvalidAuthtoken_whenDeleteDocument_thenInvalidAuthenticationTokenException() {
+        taskService.deleteDocument("1", "totally_wrong_authtoken");
+    }
+
+    @Test(expected = UserNotLoggedInException.class)
+    @SneakyThrows
+    public void givenNoLogin_whenDeleteDocument_thenUserNotLoggedInException() {
+        System.clearProperty("login.valid.thru");
+        taskService.deleteDocument("1", "totally_wrong_authtoken");
+    }
+
+    @Test(expected = LoginExpiredException.class)
+    @SneakyThrows
+    public void givenExpiredLogin_whenDeleteDocument_thenLoginExpiredException() {
+        System.setProperty("login.valid.thru", LocalDateTime.now().minusMinutes(1).toString());
         taskService.deleteDocument("1", "totally_wrong_authtoken");
     }
 
