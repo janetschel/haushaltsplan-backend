@@ -1,6 +1,8 @@
 package de.janetschel.haushaltsplan.backend.controller;
 
 import de.janetschel.haushaltsplan.backend.exception.InvalidBase64StringException;
+import de.janetschel.haushaltsplan.backend.exception.LoginExpiredException;
+import de.janetschel.haushaltsplan.backend.exception.UserNotLoggedInException;
 import de.janetschel.haushaltsplan.backend.service.AuthTokenService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,7 +20,7 @@ public class AuthTokenController {
 
     @GetMapping("/getAuthToken")
     public ResponseEntity<String> getAuthToken(@RequestHeader("Auth-String") String base64String)
-            throws InvalidBase64StringException {
+            throws InvalidBase64StringException, LoginExpiredException, UserNotLoggedInException {
         return authTokenService.getAuthToken(base64String);
     }
 }

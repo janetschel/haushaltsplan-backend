@@ -42,7 +42,7 @@ public class TaskServiceTest {
     }
 
     @Test
-    @SneakyThrows(InvalidAuthenticationTokenException.class)
+    @SneakyThrows
     public void givenValidAuthtoken_whenGetDocuments_thenNoException() {
         List<TaskEntity> expectedTaskEntities = Collections.singletonList(new TaskEntity());
         Mockito.when(taskRepository.findAll()).thenReturn(expectedTaskEntities);
@@ -58,13 +58,13 @@ public class TaskServiceTest {
     }
 
     @Test(expected = InvalidAuthenticationTokenException.class)
-    @SneakyThrows(InvalidAuthenticationTokenException.class)
+    @SneakyThrows
     public void givenInvalidAuthtoken_whenGetDocuments_thenInvalidAuthenticationTokenException() {
         taskService.getDocuments("totally_wrong_authtoken");
     }
 
     @Test
-    @SneakyThrows(InvalidAuthenticationTokenException.class)
+    @SneakyThrows
     public void givenValidAuthtoken_whenAddDocument_thenNoException() {
         // Testing successful add
         Mockito.when(taskRepository.findById(taskEntity.getId())).thenReturn(java.util.Optional.empty());
@@ -94,13 +94,13 @@ public class TaskServiceTest {
     }
 
     @Test(expected = InvalidAuthenticationTokenException.class)
-    @SneakyThrows(InvalidAuthenticationTokenException.class)
+    @SneakyThrows
     public void givenInvalidAuthtoken_whenAddDocument_thenInvalidAuthenticationTokenException() {
         taskService.addDocument(taskEntity, "totally_wrong_authtoken");
     }
 
     @Test
-    @SneakyThrows(InvalidAuthenticationTokenException.class)
+    @SneakyThrows
     public void givenValidAuthtoken_whenUpdateDocument_thenNoException() {
         // Testing successful update
         Mockito.when(taskRepository.findById(taskEntity.getId())).thenReturn(java.util.Optional.ofNullable(taskEntity));
@@ -135,13 +135,13 @@ public class TaskServiceTest {
     }
 
     @Test(expected = InvalidAuthenticationTokenException.class)
-    @SneakyThrows(InvalidAuthenticationTokenException.class)
+    @SneakyThrows
     public void givenInvalidAuthtoken_whenUpdateDocument_thenInvalidAuthenticationTokenException() {
         taskService.updateDocument(taskEntity, "totally_wrong_authtoken");
     }
 
     @Test
-    @SneakyThrows(InvalidAuthenticationTokenException.class)
+    @SneakyThrows
     public void givenValidAuthtoken_whenAddFeedbackToDocument_thenNoException() {
         // Testing successful adding of feedback
         taskEntity.setDone(true);
@@ -195,13 +195,13 @@ public class TaskServiceTest {
     }
 
     @Test(expected = InvalidAuthenticationTokenException.class)
-    @SneakyThrows(InvalidAuthenticationTokenException.class)
+    @SneakyThrows
     public void givenInvalidAuthtoken_whenAddFeedbackToDocument_thenInvalidAuthenticationTokenException() {
         taskService.addFeedbackToDocument(taskEntity.getId(), taskEntity.getFeedback(), "totally_wrong_authtoken");
     }
 
     @Test
-    @SneakyThrows(InvalidAuthenticationTokenException.class)
+    @SneakyThrows
     public void givenValidAuthtoken_whenDeleteDocument_thenNoException() {
         // Testing successful delete
         Mockito.when(taskRepository.findById(taskEntity.getId())).thenReturn(java.util.Optional.ofNullable(taskEntity));
@@ -229,7 +229,7 @@ public class TaskServiceTest {
     }
 
     @Test(expected = InvalidAuthenticationTokenException.class)
-    @SneakyThrows(InvalidAuthenticationTokenException.class)
+    @SneakyThrows
     public void givenInvalidAuthtoken_whenDeleteDocument_thenInvalidAuthenticationTokenException() {
         taskService.deleteDocument("1", "totally_wrong_authtoken");
     }

@@ -3,6 +3,8 @@ package de.janetschel.haushaltsplan.backend.service;
 import de.janetschel.haushaltsplan.backend.entity.TaskEntity;
 import de.janetschel.haushaltsplan.backend.enums.Feedback;
 import de.janetschel.haushaltsplan.backend.exception.InvalidAuthenticationTokenException;
+import de.janetschel.haushaltsplan.backend.exception.LoginExpiredException;
+import de.janetschel.haushaltsplan.backend.exception.UserNotLoggedInException;
 import de.janetschel.haushaltsplan.backend.repository.TaskRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -22,7 +24,11 @@ public class TaskService {
         this.taskRepository = taskRepository;
     }
 
-    public ResponseEntity<List<TaskEntity>> getDocuments(String authToken) throws InvalidAuthenticationTokenException {
+    public ResponseEntity<List<TaskEntity>> getDocuments(String authToken)
+            throws InvalidAuthenticationTokenException, LoginExpiredException, UserNotLoggedInException {
+
+        LoginService.checkIfLoginIsExpired();
+
         if (!authToken.equals(authtoken)) {
             throw new InvalidAuthenticationTokenException();
         }
@@ -30,7 +36,11 @@ public class TaskService {
         return ResponseEntity.ok(taskRepository.findAll());
     }
 
-    public ResponseEntity<String> addDocument(TaskEntity taskEntity, String authToken) throws InvalidAuthenticationTokenException {
+    public ResponseEntity<String> addDocument(TaskEntity taskEntity, String authToken)
+            throws InvalidAuthenticationTokenException, LoginExpiredException, UserNotLoggedInException {
+
+        LoginService.checkIfLoginIsExpired();
+
         if (!authToken.equals(authtoken)) {
             throw new InvalidAuthenticationTokenException();
         }
@@ -49,7 +59,11 @@ public class TaskService {
         return ResponseEntity.status(HttpStatus.CREATED).body("Task added successfully");
     }
 
-    public ResponseEntity<String> updateDocument(TaskEntity taskEntity, String authToken) throws InvalidAuthenticationTokenException {
+    public ResponseEntity<String> updateDocument(TaskEntity taskEntity, String authToken)
+            throws InvalidAuthenticationTokenException, LoginExpiredException, UserNotLoggedInException {
+
+        LoginService.checkIfLoginIsExpired();
+
         if (!authToken.equals(authtoken)) {
             throw new InvalidAuthenticationTokenException();
         }
@@ -77,7 +91,10 @@ public class TaskService {
     }
 
     public ResponseEntity<String> addFeedbackToDocument(String id, Feedback feedback, String authToken)
-            throws InvalidAuthenticationTokenException {
+            throws InvalidAuthenticationTokenException, LoginExpiredException, UserNotLoggedInException {
+
+        LoginService.checkIfLoginIsExpired();
+
         if (!authToken.equals(authtoken)) {
             throw new InvalidAuthenticationTokenException();
         }
@@ -102,7 +119,11 @@ public class TaskService {
         return ResponseEntity.ok("Feedback successfully added to task");
     }
 
-    public ResponseEntity<String> deleteDocument(String id, String authToken) throws InvalidAuthenticationTokenException {
+    public ResponseEntity<String> deleteDocument(String id, String authToken)
+            throws InvalidAuthenticationTokenException, LoginExpiredException, UserNotLoggedInException {
+
+        LoginService.checkIfLoginIsExpired();
+
         if (!authToken.equals(authtoken)) {
             throw new InvalidAuthenticationTokenException();
         }
